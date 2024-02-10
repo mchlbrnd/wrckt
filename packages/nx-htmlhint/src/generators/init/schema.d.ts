@@ -1,4 +1,4 @@
 export interface InitGeneratorSchema {
-  project?: string;
+  projectName?: string;
   skipFormat?: boolean;
 }

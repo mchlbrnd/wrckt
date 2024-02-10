@@ -42,7 +42,7 @@ describe('init generator', () => {
   });
 
   it('should add dependencies and create configuration in projectRoot', async () => {
-    await generator(tree, { ...defaultOptions, project: 'project' });
+    await generator(tree, { ...defaultOptions, projectName: 'project' });
 
     const packagejson = readJson(tree, 'package.json');
     expect(packagejson.dependencies['htmlhint']).toBeFalsy();

@@ -4,11 +4,11 @@
   "title": "",
   "type": "object",
   "properties": {
-    "project": {
+    "projectName": {
       "type": "string",
       "aliases": [
         "name",
-        "projectName"
+        "projcet"
       ],
       "description": "Project for which to cconfigure nx-htmlhint.",
       "$default": {
