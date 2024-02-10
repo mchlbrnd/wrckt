@@ -36,9 +36,11 @@ export const initGenerator = async (
 
 const createConfigurationFile = (
   tree: Tree,
-  { project }: InitGeneratorSchema
+  { projectName }: InitGeneratorSchema
 ) => {
-  const path = project ? readProjectConfiguration(tree, project).root : '.';
+  const path = projectName
+    ? readProjectConfiguration(tree, projectName).root
+    : '.';
   const config = joinPathFragments(path, HTMLHINT_CONFIG);
 
   if (!tree.exists(config)) {
