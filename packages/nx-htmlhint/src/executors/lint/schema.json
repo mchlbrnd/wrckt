@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "NxHtmlhintLintProjectConfiguration",
+  "cli": "nx",
+  "title": "Add htmlhintrc configuration to a project",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "target": {
+      "description": "<file|folder|pattern|stdin|url ...>",
+      "type": "string",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "Which target?"
+    },
+    "config": {
+      "type": "string",
+      "description": "Custom configuration file.",
+      "default": ".htmlhintrc"
+    },
+    "rules": {
+      "type": "string",
+      "description": "Set all of the rules available."
+    },
+    "rulesdir": {
+      "type": "string",
+      "description": "Load custom rules from file or foldere."
+    },
+    "format": {
+      "type": "string",
+      "description": "Output messages as custom format.",
+      "enum": [
+        "compact",
+        "checkstyle",
+        "json",
+        "html",
+        "junit",
+        "unix",
+        "markdown"
+      ],
+      "x-prompt": {
+        "message": "Which formatter would you like to use?",
+        "type": "list",
+        "items": [
+          {
+            "value": "compact",
+            "label": "compact"
+          },
+          {
+            "value": "checkstyle",
+            "label": "checkstyle"
+          },
+          {
+            "value": "json",
+            "label": "json"
+          },
+          {
+            "value": "html",
+            "label": "html"
+          },
+          {
+            "value": "junit",
+            "label": "junit"
+          },
+          {
+            "value": "unix",
+            "label": "unix"
+          },
+          {
+            "value": "markdown",
+            "label": "markdown"
+          }
+        ]
+      }
+    },
+    "ignore": {
+      "description": "Add pattern to exclude matches.",
+      "type": "string"
+    },
+    "nocolor": {
+      "type": "boolean",
+      "x-promt": "Disable color?"
+    },
+    "warn": {
+      "type": "boolean",
+      "x-promt": "Warn only, exit with 0?"
+    },
+    "project": {
+      "type": "string",
+      "description": "The name of the project.",
+      "$default": {
+        "$source": "projectName"
+      }
+    }
+  },
+  "required": [
+    "target",
+    "project"
+  ]
+}
