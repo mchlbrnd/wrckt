@@ -6,10 +6,11 @@
     "tslib": "^2.3.0"
   },
   "peerDependencies": {
-    "htmlhint": "1.1.4"
+    "htmlhint": "^1.1.4"
   },
   "type": "commonjs",
   "main": "./src/index.js",
   "typings": "./src/index.d.ts",
-  "executors": "./executors.json"
+  "executors": "./executors.json",
+  "generators": "./generators.json"
 }
