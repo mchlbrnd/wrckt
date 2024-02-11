@@ -1,6 +1,6 @@
-export interface HtmlhintLintExecutorSchema {
+export interface LintExecutorSchema {
   target: string;
-  project: string;
+  projectName: string;
   config?: string;
   rules?: string;
   rulesdir?: string;
