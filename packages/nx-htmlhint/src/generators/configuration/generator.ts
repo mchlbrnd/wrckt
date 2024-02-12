@@ -1,5 +1,6 @@
 import {
   formatFiles,
+  joinPathFragments,
   logger,
   readProjectConfiguration,
   stripIndents,
@@ -7,7 +8,7 @@ import {
   updateProjectConfiguration,
 } from '@nx/devkit';
 import { ConfigurationGeneratorSchema } from './schema';
-import { HTMLHINT_CONFIG } from '../../utils/utils';
+import { HTMLHINT_CONFIG, HTMLHINT_TARGET_PATTERN } from '../../utils/utils';
 import initGenerator from '../init/generator';
 
 export const configurationGenerator = async (
@@ -33,19 +34,23 @@ export const configurationGenerator = async (
     stripIndents`Creating htmlhint target for project '${projectName}'...`
   );
 
-  await initGenerator(tree, {
-    projectName: withConfig ? projectName : null,
-    skipFormat,
-  });
+  if (projectName) {
+    await initGenerator(tree, {
+      projectName: withConfig ? projectName : null,
+      skipFormat,
+    });
+  } else {
+    await initGenerator(tree, { skipFormat });
+  }
 
   projectConfiguration.targets['htmlhint'] = {
     executor: '@wrckt/nx-htmlhint:lint',
-    outputs: ['{options.outputFile}'],
     options: {
-      config: !options.withConfig
-        ? `{workspaceRoot}/${HTMLHINT_CONFIG}`
-        : `{projectRoot}/${HTMLHINT_CONFIG}`,
-      target: '{projcetRoot}/**/*',
+      config: joinPathFragments(
+        withConfig ? '{projectRoot}' : '{workspaceRoot}',
+        HTMLHINT_CONFIG
+      ),
+      target: joinPathFragments('{projectRoot}', HTMLHINT_TARGET_PATTERN),
     },
   };
 

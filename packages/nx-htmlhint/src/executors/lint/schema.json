@@ -6,6 +6,13 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
+    "projectName": {
+      "type": "string",
+      "description": "The name of the project.",
+      "$default": {
+        "$source": "projectName"
+      }
+    },
     "target": {
       "description": "<file|folder|pattern|stdin|url ...>",
       "type": "string",
@@ -86,17 +93,10 @@
     "warn": {
       "type": "boolean",
       "x-promt": "Warn only, exit with 0?"
-    },
-    "project": {
-      "type": "string",
-      "description": "The name of the project.",
-      "$default": {
-        "$source": "projectName"
-      }
     }
   },
   "required": [
     "target",
-    "project"
+    "projectName"
   ]
 }

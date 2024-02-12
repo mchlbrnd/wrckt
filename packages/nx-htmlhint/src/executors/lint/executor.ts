@@ -1,9 +1,9 @@
-import { HtmlhintLintExecutorSchema } from './schema';
+import { LintExecutorSchema } from './schema';
 import { spawn } from 'child_process';
 import { join } from 'path';
 
 const lintExecutor = (
-  options: HtmlhintLintExecutorSchema
+  options: LintExecutorSchema
 ): Promise<{ success: boolean }> => {
   return new Promise((resolve, reject) => {
     const htmlhint = spawn('node', [

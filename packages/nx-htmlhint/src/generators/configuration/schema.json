@@ -10,12 +10,8 @@
         "name",
         "project"
       ],
-      "description": "Project for which to cconfigure nx-htmlhint.",
-      "$default": {
-        "$source": "argv",
-        "index": 0
-      },
-      "x-prompt": "For which project do you want to cconfigure nx-htmlhint?",
+      "description": "Project for which to configure nx-htmlhint.",
+      "x-prompt": "For which project do you want to configure nx-htmlhint?",
       "x-dropdown": "projects",
       "x-priority": "important"
     },
@@ -50,7 +46,7 @@
     }
   },
   "required": [
-    "project"
+    "projectName"
   ],
   "additionalProperties": false
 }

@@ -1,4 +1,3 @@
-import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import {
   Tree,
   addProjectConfiguration,
@@ -7,9 +6,14 @@ import {
   readJson,
   readProjectConfiguration,
 } from '@nx/devkit';
+import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 
+import {
+  HTMLHINT_CONFIG,
+  HTMLHINT_CONFIG_RULES,
+  HTMLHINT_TARGET_PATTERN,
+} from '../../utils/utils';
 import generator from './generator';
-import { HTMLHINT_CONFIG, HTMLHINT_CONFIG_RULES } from '../../utils/utils';
 
 describe('configuration generator', () => {
   let tree: Tree;
@@ -35,10 +39,9 @@ describe('configuration generator', () => {
     const projectConfiguration = readProjectConfiguration(tree, 'project');
     expect(projectConfiguration.targets['htmlhint']).toStrictEqual({
       executor: '@wrckt/nx-htmlhint:lint',
-      outputs: ['{options.outputFile}'],
       options: {
         config: `{workspaceRoot}/${HTMLHINT_CONFIG}`,
-        target: '{projcetRoot}/**/*',
+        target: `{projectRoot}/${HTMLHINT_TARGET_PATTERN}`,
       },
     });
   });
@@ -60,10 +63,9 @@ describe('configuration generator', () => {
     const projectConfiguration = readProjectConfiguration(tree, 'project');
     expect(projectConfiguration.targets['htmlhint']).toStrictEqual({
       executor: '@wrckt/nx-htmlhint:lint',
-      outputs: ['{options.outputFile}'],
       options: {
         config: `{projectRoot}/${HTMLHINT_CONFIG}`,
-        target: '{projcetRoot}/**/*',
+        target: `{projectRoot}/${HTMLHINT_TARGET_PATTERN}`,
       },
     });
   });
