@@ -1,7 +1,7 @@
-import executor from './executor';
-import { HTMLHINT_CONFIG, HTMLHINT_TARGET_PATTERN } from '../../utils/utils';
-import { cwd } from 'process';
 import { join } from 'path';
+import { cwd } from 'process';
+import { HTMLHINT_CONFIG, HTMLHINT_TARGET_PATTERN } from '../../utils/utils';
+import executor from './executor';
 
 describe('lint executor', () => {
   it('can run and fail', async () => {

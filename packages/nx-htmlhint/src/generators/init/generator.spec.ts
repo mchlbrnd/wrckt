@@ -1,4 +1,3 @@
-import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import {
   NxJsonConfiguration,
   Tree,
@@ -9,15 +8,16 @@ import {
   updateJson,
   writeJson,
 } from '@nx/devkit';
+import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 
-import generator from './generator';
-import { InitGeneratorSchema } from './schema';
 import {
   HTMLHINT_CONFIG,
   HTMLHINT_CONFIG_RULES,
   HTMLHINT_SEMVER,
   HTMLHINT_TARGET_PATTERN,
 } from '../../utils/utils';
+import generator from './generator';
+import { InitGeneratorSchema } from './schema';
 
 const defaultOptions: InitGeneratorSchema = {
   skipFormat: false,

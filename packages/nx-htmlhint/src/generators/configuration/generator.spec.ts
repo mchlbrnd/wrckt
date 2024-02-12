@@ -1,4 +1,3 @@
-import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import {
   Tree,
   addProjectConfiguration,
@@ -7,13 +6,14 @@ import {
   readJson,
   readProjectConfiguration,
 } from '@nx/devkit';
+import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 
-import generator from './generator';
 import {
   HTMLHINT_CONFIG,
   HTMLHINT_CONFIG_RULES,
   HTMLHINT_TARGET_PATTERN,
 } from '../../utils/utils';
+import generator from './generator';
 
 describe('configuration generator', () => {
   let tree: Tree;
