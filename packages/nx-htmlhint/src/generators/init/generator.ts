@@ -14,9 +14,9 @@ import {
 } from '@nx/devkit';
 import {
   HTMLHINT_CONFIG,
-  HTMLHINT_CONFIG_PATTERN,
   HTMLHINT_CONFIG_RULES,
   HTMLHINT_SEMVER,
+  HTMLHINT_TARGET_PATTERN,
 } from '../../utils/utils';
 import { InitGeneratorSchema } from './schema';
 
@@ -28,7 +28,7 @@ export const initGenerator = async (
   createConfigurationFile(tree, options);
   updateNxJson(tree);
 
-  if (!options.skipFormat) {
+  if (!options?.skipFormat) {
     await formatFiles(tree);
   }
   return installTask;
@@ -41,8 +41,8 @@ const createConfigurationFile = (
   const path = projectName
     ? readProjectConfiguration(tree, projectName).root
     : '.';
-  const config = joinPathFragments(path, HTMLHINT_CONFIG);
 
+  const config = joinPathFragments(path, HTMLHINT_CONFIG);
   if (!tree.exists(config)) {
     writeJson(tree, config, HTMLHINT_CONFIG_RULES);
   } else {
@@ -72,7 +72,7 @@ const updateNxJson = (tree: Tree) => {
 
   const configInProject = `!${joinPathFragments(
     '{projectRoot}',
-    HTMLHINT_CONFIG_PATTERN
+    HTMLHINT_CONFIG
   )}`;
   if (
     nxJson.namedInputs?.['production'] &&
@@ -83,16 +83,13 @@ const updateNxJson = (tree: Tree) => {
 
   nxJson.targetDefaults ??= {};
   nxJson.targetDefaults['htmlhint'] ??= {};
-  nxJson.targetDefaults['htmlhint'].inputs ??= ['default'];
   nxJson.targetDefaults['htmlhint'].cache = true;
-
-  const configInRoot = joinPathFragments(
-    '{workspaceRoot}',
-    HTMLHINT_CONFIG_PATTERN
-  );
-  if (!nxJson.targetDefaults['htmlhint'].inputs.includes(configInRoot)) {
-    nxJson.targetDefaults['htmlhint'].inputs.push(configInRoot);
-  }
+  nxJson.targetDefaults['htmlhint'].inputs ??= ['default'];
+  nxJson.targetDefaults['htmlhint'].outputs ??= ['{options.outputFile}'];
+  nxJson.targetDefaults['htmlhint'].options ??= {
+    config: joinPathFragments('{workspaceRoot}', HTMLHINT_CONFIG),
+    target: joinPathFragments('{projectRoot}', HTMLHINT_TARGET_PATTERN),
+  };
 
   devkitUpdateNxJson(tree, nxJson);
 };

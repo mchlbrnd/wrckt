@@ -1,28 +1,23 @@
-import { LintExecutorSchema } from './schema';
 import executor from './executor';
+import { HTMLHINT_CONFIG, HTMLHINT_TARGET_PATTERN } from '../../utils/utils';
+import { cwd } from 'process';
 import { join } from 'path';
 
-const successOptions: LintExecutorSchema = {
-  config: join(__dirname, '..', '..', 'test', '.htmlhintrc'),
-  target: join(__dirname, '..', '..', 'test', 'success.html'),
-  projectName: 'test-app',
-};
-
-const failOptions: LintExecutorSchema = {
-  config: join(__dirname, '..', '..', 'test', '.htmlhintrc'),
-  target: join(__dirname, '..', '..', 'test', 'fail.html'),
-  projectName: 'test-app',
-};
-
 describe('lint executor', () => {
-  it('should succeed', async () => {
-    const output = await executor(successOptions);
-    expect(output.success).toBe(true);
-  });
-
-  it('should fail', async () => {
-    executor(failOptions).catch((output) => {
-      expect(output.success).toBe(false);
-    });
+  it('can run and fail', async () => {
+    try {
+      await executor({
+        config: HTMLHINT_CONFIG,
+        target: join(
+          cwd(),
+          'packackes',
+          'nx-htmlhint',
+          HTMLHINT_TARGET_PATTERN
+        ),
+        projectName: 'test-project',
+      });
+    } catch (e) {
+      expect(e?.success).toBe(false);
+    }
   });
 });

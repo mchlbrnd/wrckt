@@ -12,7 +12,12 @@ import {
 
 import generator from './generator';
 import { InitGeneratorSchema } from './schema';
-import { HTMLHINT_CONFIG_RULES, HTMLHINT_SEMVER } from '../../utils/utils';
+import {
+  HTMLHINT_CONFIG,
+  HTMLHINT_CONFIG_RULES,
+  HTMLHINT_SEMVER,
+  HTMLHINT_TARGET_PATTERN,
+} from '../../utils/utils';
 
 const defaultOptions: InitGeneratorSchema = {
   skipFormat: false,
@@ -92,12 +97,18 @@ describe('init generator', () => {
       const nxConfig = readJson<NxJsonConfiguration>(tree, 'nx.json');
 
       expect(nxConfig.targetDefaults?.['htmlhint']).toStrictEqual({
-        inputs: ['default', `{workspaceRoot}/.htmlhintrc(.(json|yml|yaml))?`],
         cache: true,
+        inputs: ['default'],
+        outputs: ['{options.outputFile}'],
+        options: {
+          config: `{workspaceRoot}/${HTMLHINT_CONFIG}`,
+          target: `{projectRoot}/${HTMLHINT_TARGET_PATTERN}`,
+        },
       });
-      expect(nxConfig.namedInputs?.['production']).toContain(
-        `!{projectRoot}/.htmlhintrc(.(json|yml|yaml))?`
-      );
+      expect(nxConfig.namedInputs?.['production']).toStrictEqual([
+        'default',
+        `!{projectRoot}/${HTMLHINT_CONFIG}`,
+      ]);
     });
 
     it('should not create namedInputs production fileset if not present', async () => {

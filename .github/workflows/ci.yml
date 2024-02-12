@@ -31,3 +31,5 @@ jobs:
       - uses: nrwl/nx-set-shas@v4
 
       - run: npx nx affected -t lint test build
+
+      - run: npx nx run nx-htmlhint-e2e:e2e

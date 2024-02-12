@@ -1,6 +1,6 @@
 export const HTMLHINT_CONFIG = '.htmlhintrc';
 
-export const HTMLHINT_CONFIG_PATTERN = '.htmlhintrc(.(json|yml|yaml))?';
+export const HTMLHINT_TARGET_PATTERN = '**/*.{htm,html}';
 
 export const HTMLHINT_CONFIG_RULES = {
   'tagname-lowercase': true,
