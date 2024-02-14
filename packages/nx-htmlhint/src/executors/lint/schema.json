@@ -6,13 +6,6 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "projectName": {
-      "type": "string",
-      "description": "The name of the project.",
-      "$default": {
-        "$source": "projectName"
-      }
-    },
     "target": {
       "description": "<file|folder|pattern|stdin|url ...>",
       "type": "string",
@@ -23,22 +16,37 @@
       "x-prompt": "Which target?"
     },
     "config": {
+      "aliases": [
+        "c"
+      ],
       "type": "string",
       "description": "Custom configuration file.",
       "default": ".htmlhintrc"
     },
     "rules": {
+      "aliases": [
+        "r"
+      ],
       "type": "string",
-      "description": "Set all of the rules available."
+      "description": "Set rules to lint against."
     },
-    "rulesdir": {
+    "rulesDir": {
+      "aliases": [
+        "R",
+        "rulesdir"
+      ],
       "type": "string",
-      "description": "Load custom rules from file or foldere."
+      "description": "Load custom rules from file or directory."
     },
     "format": {
       "type": "string",
-      "description": "Output messages as custom format.",
+      "aliases": [
+        "f"
+      ],
+      "default": "default",
+      "description": "Sets output format of linter.",
       "enum": [
+        "default",
         "compact",
         "checkstyle",
         "json",
@@ -83,20 +91,42 @@
       }
     },
     "ignore": {
-      "description": "Add pattern to exclude matches.",
+      "aliases": [
+        "i"
+      ],
+      "description": "Add pattern to exclude files from mathing.",
       "type": "string"
     },
-    "nocolor": {
+    "noColor": {
+      "aliases": [
+        "nocolor"
+      ],
       "type": "boolean",
-      "x-promt": "Disable color?"
+      "default": false,
+      "description": "Whether color of lint results in console is disabled",
+      "x-prompt": {
+        "message": "Disable color of lint results in console output?",
+        "type": "list",
+        "items": [
+          {
+            "label": "Yes",
+            "value": true
+          },
+          {
+            "label": "No",
+            "value": false
+          }
+        ]
+      }
     },
     "warn": {
       "type": "boolean",
+      "default": false,
       "x-promt": "Warn only, exit with 0?"
     }
   },
   "required": [
-    "target",
-    "projectName"
+    "config",
+    "target"
   ]
 }

@@ -11,7 +11,8 @@
       ],
       "options": {
         "jestConfig": "packages/nx-htmlhint-e2e/jest.config.ts",
-        "runInBand": true
+        "runInBand": true,
+        "detectOpenHandles": true
       },
       "dependsOn": [
         "^build"

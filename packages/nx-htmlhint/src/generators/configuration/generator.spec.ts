@@ -47,7 +47,7 @@ describe('configuration generator', () => {
   });
 
   it('should create target htmlhint for project with private config', async () => {
-    await generator(tree, { projectName: 'project', withConfig: true });
+    await generator(tree, { projectName: 'project', withProjectConfig: true });
 
     // should create private config for project
     const projectConfig = readJson(
