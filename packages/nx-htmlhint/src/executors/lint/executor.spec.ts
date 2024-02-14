@@ -1,23 +1,19 @@
 import { join } from 'path';
 import { cwd } from 'process';
-import { HTMLHINT_CONFIG, HTMLHINT_TARGET_PATTERN } from '../../utils/utils';
+import { HTMLHINT_TARGET_PATTERN } from '../../utils/utils';
 import executor from './executor';
 
 describe('lint executor', () => {
-  it('can run and fail', async () => {
-    try {
-      await executor({
-        config: HTMLHINT_CONFIG,
-        target: join(
-          cwd(),
-          'packackes',
-          'nx-htmlhint',
-          HTMLHINT_TARGET_PATTERN
-        ),
-        projectName: 'test-project',
-      });
-    } catch (e) {
-      expect(e?.success).toBe(false);
-    }
+  it('should run on non-existing directory and succeed', async () => {
+    const { success, stdout } = await executor({
+      target: join(
+        cwd(),
+        'tmp',
+        '___does_not_exist___',
+        HTMLHINT_TARGET_PATTERN
+      ),
+    });
+    expect(success).toBe(true);
+    expect(stdout).toMatch('Scanned 0 files, no errors found');
   });
 });

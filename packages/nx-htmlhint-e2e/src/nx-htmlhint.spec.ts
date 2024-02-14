@@ -1,188 +1,141 @@
 import { execSync } from 'child_process';
-import { mkdirSync, rmSync, writeFileSync } from 'fs';
-import { dirname, join } from 'path';
+import { writeFileSync } from 'fs';
+import { join } from 'path';
+import { createWorkspace, removeWorkspace } from './utils/workspace-utils';
+import { addProjectToWorkSpace } from './utils/project-utils';
+
+const WORKSPACE_NAME = 'test-workspace';
+
+beforeAll(() => {
+  createWorkspace(WORKSPACE_NAME, { recreate: true });
+});
+
+afterAll(() => {
+  removeWorkspace(WORKSPACE_NAME);
+});
 
 describe('nx-htmlhint', () => {
   it('should be installed', () => {
-    const { workspaceDirectory } = createTestWorkspaceWithProject('install');
+    const { workspaceDirectory } = addProjectToWorkSpace(
+      WORKSPACE_NAME,
+      'install'
+    );
+
     // npm ls will fail if the package is not installed properly
-    execSync('npm ls @wrckt/nx-htmlhint', {
+    execSync(`npm ls @wrckt/nx-htmlhint`, {
       cwd: workspaceDirectory,
       stdio: 'inherit',
     });
   });
 
   it('should run lint executor without project configuration 1 valid html file', () => {
-    const projectName = 'without-config';
-    const { workspaceDirectory } = createTestWorkspaceWithProject(projectName);
+    const { projectName, workspaceDirectory } = addProjectToWorkSpace(
+      WORKSPACE_NAME,
+      'without-config'
+    );
 
-    // test target from fresh web app
-    const output = execSync(
+    // run configuration without project config file
+    execSync(
+      `npx nx g @wrckt/nx-htmlhint:configuration --projectName=${projectName} --with-project-config=false`,
+      {
+        cwd: workspaceDirectory,
+        stdio: 'inherit',
+      }
+    );
+
+    // run htmlhint target for current project
+    const result = execSync(
       `npx nx run ${projectName}:htmlhint --skip-nx-cache`,
       {
         cwd: workspaceDirectory,
       }
     ).toString();
 
-    console.log(output);
-    expect(output).toMatch(new RegExp('Config loaded: .+?.htmlhintrc'));
-    expect(output).toMatch('Scanned 1 files, no errors found');
+    expect(result).toMatch(new RegExp('Config loaded: .+?.htmlhintrc'));
+    expect(result).toMatch('Scanned 1 files, no errors found');
   });
 
   it('should run lint executor with project configuration with 1 valid and 1 invalid html files', () => {
-    const projectName = 'with-config-add-html-invalid';
-    const { projectDirectory, workspaceDirectory } =
-      createTestWorkspaceWithProject(projectName);
+    const { projectDirectory, projectName, workspaceDirectory } =
+      addProjectToWorkSpace(WORKSPACE_NAME, 'with-config-add-html-invalid');
+
+    // run configuration with project config file
+    execSync(
+      `npx nx g @wrckt/nx-htmlhint:configuration --projectName=${projectName} --with-project-config=true`,
+      {
+        cwd: workspaceDirectory,
+        stdio: 'inherit',
+      }
+    );
 
     // edit html with invalid data and test target
     const file = join(projectDirectory, 'src', 'app', 'app.element.html');
     writeFileSync(file, '<img alt="an image" src />');
 
+    // should throw with html validation errors
     try {
       execSync(`npx nx run ${projectName}:htmlhint --skip-nx-cache`, {
         cwd: workspaceDirectory,
-      }).toString();
-    } catch (error: any) {
-      const output = error.output.toString();
-
-      console.log(output);
-      expect(output).toMatch('src-not-empty');
-      expect(output).toMatch('Scanned 2 files, found 1 errors in 1 files');
+      });
+    } catch ({ stdout }) {
+      const result = stdout.toString();
+      expect(result).toMatch('src-not-empty');
+      expect(result).toMatch('Scanned 2 files, found 1 errors in 1 files');
     }
   });
 
-  it('should run lint executor with project configuration with2 2 valid html files', () => {
-    const projectName = 'with-config-add-html-valid';
-    const { projectDirectory, workspaceDirectory } =
-      createTestWorkspaceWithProject(projectName);
+  it('should run lint executor with project configuration with 2 valid html files', () => {
+    const { projectDirectory, projectName, workspaceDirectory } =
+      addProjectToWorkSpace(WORKSPACE_NAME, 'with-config-add-html-valid');
+
+    // run configuration generator (adds target to project, adds .htmlhintrc to projectRoot or workspaceRoot depending on withConfig)
+    execSync(
+      `npx nx g @wrckt/nx-htmlhint:configuration --projectName=${projectName} --with-project-config=true`,
+      {
+        cwd: workspaceDirectory,
+        stdio: 'inherit',
+      }
+    );
 
     // add valid html to web app and test target
     const file = join(projectDirectory, 'src', 'app', 'app.element.html');
     writeFileSync(file, '<img alt="an image" src="img.jpg" />');
-    const output = execSync(
+
+    const result = execSync(
       `npx nx run ${projectName}:htmlhint --skip-nx-cache`,
       {
         cwd: workspaceDirectory,
       }
     ).toString();
 
-    console.log(output);
-    expect(output).toMatch('Scanned 2 files, no errors found');
+    expect(result).toMatch('Scanned 2 files, no errors found');
   });
 
   it('should run lint executor with project configuration with 1 valid html file', () => {
-    const projectName = 'with-config';
-    const { workspaceDirectory } = createTestWorkspaceWithProject(projectName);
+    const { projectName, workspaceDirectory } = addProjectToWorkSpace(
+      WORKSPACE_NAME,
+      'with-config'
+    );
+
+    // run configuration generator (adds target to project, adds .htmlhintrc to projectRoot or workspaceRoot depending on withConfig)
+    execSync(
+      `npx nx g @wrckt/nx-htmlhint:configuration --projectName=${projectName} --with-project-config=true`,
+      {
+        cwd: workspaceDirectory,
+        stdio: 'inherit',
+      }
+    );
 
     // test target from fresh web app
-    const output = execSync(
+    const result = execSync(
       `npx nx run ${projectName}:htmlhint --skip-nx-cache`,
       {
         cwd: workspaceDirectory,
       }
     ).toString();
 
-    console.log(output);
-    expect(output).toMatch(new RegExp(projectName + '/.htmlhintrc'));
-    expect(output).toMatch('Scanned 1 files, no errors found');
+    expect(result).toMatch(new RegExp(projectName + '/.htmlhintrc'));
+    expect(result).toMatch('Scanned 1 files, no errors found');
   });
 });
 
-/**
- * Deletes a test project (workaround for busy resource on Windows)
- */
-function deleteTestWorkspace(workspaceName: string) {
-  const workspaceDirectory = join(process.cwd(), 'tmp', workspaceName);
-  // workaround on Windows otherwise next rm does error with EBUSY
-  rmSync(join(workspaceDirectory, '.nx'), {
-    recursive: true,
-    force: true,
-    retryDelay: 2000,
-    maxRetries: 5,
-  });
-
-  // Ensure projectDirectory is empty
-  rmSync(workspaceDirectory, {
-    recursive: true,
-    force: true,
-    retryDelay: 2000,
-    maxRetries: 5,
-  });
-
-  return workspaceDirectory;
-}
-
-/**
- * Creates a test project with create-nx-workspace and installs the plugin
- */
-function createTestWorkspace(workspaceName: string) {
-  // start with clean project dir
-  const workspaceDirectory = deleteTestWorkspace(workspaceName);
-
-  mkdirSync(dirname(workspaceDirectory), {
-    recursive: true,
-  });
-
-  execSync(
-    `npx --yes create-nx-workspace@18.0.3 ${workspaceName} --preset=apps --nxCloud=skip`,
-    {
-      cwd: dirname(workspaceDirectory),
-      stdio: 'inherit',
-      env: process.env,
-    }
-  );
-
-  execSync(`npx nx add @nx/web`, {
-    cwd: workspaceDirectory,
-    stdio: 'inherit',
-  });
-
-  execSync(`npm install @wrckt/nx-htmlhint@e2e`, {
-    cwd: workspaceDirectory,
-    stdio: 'inherit',
-    env: process.env,
-  });
-
-  return workspaceDirectory;
-}
-
-function createTestProject(
-  cwd: string,
-  projectName: string,
-  withConfig = true
-) {
-  execSync(
-    `npx nx g @nx/web:app ${projectName} --e2e-test-runner=none --style=css --bundler=none`,
-    {
-      cwd,
-      stdio: 'inherit',
-    }
-  );
-
-  execSync(`npx nx g @wrckt/nx-htmlhint:init`, {
-    cwd,
-    stdio: 'inherit',
-  });
-
-  execSync(
-    `npx nx g @wrckt/nx-htmlhint:configuration --projectName=${projectName} --with-config=${withConfig}`,
-    {
-      cwd,
-      stdio: 'inherit',
-    }
-  );
-  return join(cwd, projectName);
-}
-
-function createTestWorkspaceWithProject(
-  workspaceName: string,
-  projectName?: string
-): { workspaceDirectory; projectDirectory } {
-  projectName ??= workspaceName;
-
-  const workspaceDirectory = createTestWorkspace(workspaceName);
-
-  const projectDirectory = createTestProject(workspaceDirectory, projectName);
-
-  return { workspaceDirectory, projectDirectory };
-}

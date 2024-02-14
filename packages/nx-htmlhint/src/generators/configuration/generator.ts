@@ -16,7 +16,7 @@ export const configurationGenerator = async (
   options: ConfigurationGeneratorSchema
 ) => {
   let projectConfiguration;
-  const { projectName, withConfig, skipFormat } = options;
+  const { projectName, withProjectConfig, skipFormat } = options;
   try {
     projectConfiguration = readProjectConfiguration(tree, projectName);
 
@@ -36,7 +36,7 @@ export const configurationGenerator = async (
 
   if (projectName) {
     await initGenerator(tree, {
-      projectName: withConfig ? projectName : null,
+      projectName: withProjectConfig ? projectName : null,
       skipFormat,
     });
   } else {
@@ -47,7 +47,7 @@ export const configurationGenerator = async (
     executor: '@wrckt/nx-htmlhint:lint',
     options: {
       config: joinPathFragments(
-        withConfig ? '{projectRoot}' : '{workspaceRoot}',
+        withProjectConfig ? '{projectRoot}' : '{workspaceRoot}',
         HTMLHINT_CONFIG
       ),
       target: joinPathFragments('{projectRoot}', HTMLHINT_TARGET_PATTERN),

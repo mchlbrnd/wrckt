@@ -1,10 +1,10 @@
 export interface LintExecutorSchema {
   target: string;
-  projectName: string;
   config?: string;
   rules?: string;
-  rulesdir?: string;
+  rulesDir?: string;
   format?:
+    | 'default'
     | 'compact'
     | 'checkstyle'
     | 'json'
@@ -13,6 +13,6 @@ export interface LintExecutorSchema {
     | 'unix'
     | 'markdown';
   ignore?: string;
-  nocolor?: boolean;
+  noColor?: boolean;
   warn?: boolean;
 }

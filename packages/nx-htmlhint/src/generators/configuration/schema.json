@@ -15,9 +15,10 @@
       "x-dropdown": "projects",
       "x-priority": "important"
     },
-    "withConfig": {
+    "withProjectConfig": {
       "type": "boolean",
       "aliases": [
+        "withConfig",
         "config"
       ],
       "description": "Whether project uses private htmlhint configuration.",
