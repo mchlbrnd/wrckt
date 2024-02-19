@@ -52,7 +52,7 @@ const createConfigurationFile = (
   }
 };
 
-const updateNpmDependencies = async (tree: Tree) => {
+const updateNpmDependencies = (tree: Tree): GeneratorCallback => {
   const packageJson = readJson(tree, 'package.json');
   const devDependencies: Record<string, string> = {};
 

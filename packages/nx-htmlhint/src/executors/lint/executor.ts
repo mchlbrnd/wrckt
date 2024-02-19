@@ -19,9 +19,8 @@ const lintExecutor = ({
 }> => {
   return new Promise((resolve, reject) => {
     const htmlhint = spawn(
-      'node',
+      path.resolve('node_modules', '.bin', 'htmlhint'),
       [
-        path.resolve('node_modules', 'htmlhint', 'bin', 'htmlhint'),
         ...(config ? ['-c', config] : []),
         ...(format ? ['-f', format] : []),
         ...(ignore ? ['-i', ignore] : []),

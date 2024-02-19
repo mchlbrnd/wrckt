@@ -51,7 +51,7 @@ export function createWorkspace(
 
   // create workspace
   execSync(
-    `npx create-nx-workspace@latest ${workspaceName} --preset=apps --nxCloud=skip`,
+    `npx --yes create-nx-workspace@latest ${workspaceName} --preset=apps --nxCloud=skip`,
     {
       cwd: resolve(cwd(), 'tmp'),
       env: process.env,
@@ -70,12 +70,6 @@ export function createWorkspace(
   execSync(`npm install @wrckt/nx-htmlhint@e2e`, {
     cwd: workspaceDirectory,
     env: process.env,
-    stdio: 'inherit',
-  });
-
-  // run our init generator against workspace (adds targetsDefaults, checks deps)
-  execSync(`npx nx g @wrckt/nx-htmlhint:init`, {
-    cwd: workspaceDirectory,
     stdio: 'inherit',
   });
 
