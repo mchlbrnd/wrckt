@@ -75,7 +75,7 @@ describe('configuration generator', () => {
 
     await generator(tree, { projectName: 'tcejorp' });
     expect(logger.error).toHaveBeenCalledWith(
-      `Unable to find project 'tcejorp' in current workspace. Please make sure project exists!`
+      `Cannot find configuration for 'tcejorp'`
     );
   });
 

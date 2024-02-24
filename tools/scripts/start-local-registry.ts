@@ -4,6 +4,7 @@
  */
 import { startLocalRegistry } from '@nx/js/plugins/jest/local-registry';
 import { execFileSync } from 'child_process';
+import { platform } from 'os';
 
 export default async () => {
   // local registry target to run
@@ -17,7 +18,7 @@ export default async () => {
     verbose: false,
   });
   execFileSync(
-    'nx.cmd',
+    `nx${platform() === 'win32' ? '.cmd' : ''}`,
     ['run-many', '--targets', 'publish', '--ver', '0.0.0-e2e', '--tag', 'e2e'],
     { env: process.env, stdio: 'inherit' }
   );

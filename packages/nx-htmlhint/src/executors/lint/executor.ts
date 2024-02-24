@@ -1,7 +1,8 @@
 import { spawn } from 'child_process';
 import { cwd } from 'process';
 import { LintExecutorSchema } from './schema';
-import path = require('path');
+import { resolve as pathResolve } from 'path';
+import { platform } from 'os';
 
 const lintExecutor = ({
   config,
@@ -19,9 +20,12 @@ const lintExecutor = ({
 }> => {
   return new Promise((resolve, reject) => {
     const htmlhint = spawn(
-      'node',
+      pathResolve(
+        'node_modules',
+        '.bin',
+        `htmlhint${platform() === 'win32' ? '.cmd' : ''}`
+      ),
       [
-        path.resolve('node_modules', 'htmlhint', 'bin', 'htmlhint'),
         ...(config ? ['-c', config] : []),
         ...(format ? ['-f', format] : []),
         ...(ignore ? ['-i', ignore] : []),
@@ -40,11 +44,13 @@ const lintExecutor = ({
     htmlhint.stderr.pipe(process.stderr);
 
     let stdout = '';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     htmlhint.stdout.on('data', (chunk: any) => {
       stdout += chunk.toString();
     });
 
     let stderr = '';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     htmlhint.stderr.on('error', (chunk: any) => {
       stderr += chunk.toString();
     });

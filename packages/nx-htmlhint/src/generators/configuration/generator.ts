@@ -1,5 +1,6 @@
 import {
   formatFiles,
+  GeneratorCallback,
   joinPathFragments,
   logger,
   readProjectConfiguration,
@@ -10,38 +11,36 @@ import {
 import { ConfigurationGeneratorSchema } from './schema';
 import { HTMLHINT_CONFIG, HTMLHINT_TARGET_PATTERN } from '../../utils/utils';
 import initGenerator from '../init/generator';
-
 export const configurationGenerator = async (
   tree: Tree,
   options: ConfigurationGeneratorSchema
-) => {
-  let projectConfiguration;
+): Promise<GeneratorCallback | void> => {
   const { projectName, withProjectConfig, skipFormat } = options;
+
+  let projectConfiguration;
   try {
     projectConfiguration = readProjectConfiguration(tree, projectName);
 
     if (projectConfiguration?.targets?.['htmlhint']) {
-      return logger.error(
-        stripIndents`Target htmlhint already exists on project '${projectName}'!`
+      throw new Error(
+        `Target htmlhint already exists on project '${projectName}'!`
       );
     }
-  } catch {
-    return logger.error(
-      stripIndents`Unable to find project '${projectName}' in current workspace. Please make sure project exists!`
-    );
+  } catch (error: unknown) {
+    logger.error((error as Error).message);
+    return Promise.resolve();
   }
+
+  const installTask = projectName
+    ? initGenerator(tree, {
+        projectName: withProjectConfig ? projectName : null,
+        skipFormat,
+      })
+    : initGenerator(tree, { skipFormat });
+
   logger.info(
     stripIndents`Creating htmlhint target for project '${projectName}'...`
   );
-
-  if (projectName) {
-    await initGenerator(tree, {
-      projectName: withProjectConfig ? projectName : null,
-      skipFormat,
-    });
-  } else {
-    await initGenerator(tree, { skipFormat });
-  }
 
   projectConfiguration.targets['htmlhint'] = {
     executor: '@wrckt/nx-htmlhint:lint',
@@ -61,8 +60,10 @@ export const configurationGenerator = async (
   );
 
   if (!options.skipFormat) {
-    return await formatFiles(tree);
+    await formatFiles(tree);
   }
+
+  return installTask;
 };
 
 export default configurationGenerator;
