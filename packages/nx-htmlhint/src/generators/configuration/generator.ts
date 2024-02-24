@@ -14,8 +14,23 @@ import initGenerator from '../init/generator';
 export const configurationGenerator = async (
   tree: Tree,
   options: ConfigurationGeneratorSchema
-): Promise<GeneratorCallback> => {
+): Promise<GeneratorCallback | void> => {
   const { projectName, withProjectConfig, skipFormat } = options;
+
+  let projectConfiguration;
+  try {
+    projectConfiguration = readProjectConfiguration(tree, projectName);
+
+    if (projectConfiguration?.targets?.['htmlhint']) {
+      throw new Error(
+        `Target htmlhint already exists on project '${projectName}'!`
+      );
+    }
+  } catch (error: any) {
+    logger.error(error.message);
+    return Promise.resolve();
+  }
+
   const installTask = projectName
     ? initGenerator(tree, {
         projectName: withProjectConfig ? projectName : null,
@@ -23,22 +38,6 @@ export const configurationGenerator = async (
       })
     : initGenerator(tree, { skipFormat });
 
-  let projectConfiguration;
-  try {
-    projectConfiguration = readProjectConfiguration(tree, projectName);
-
-    if (projectConfiguration?.targets?.['htmlhint']) {
-      logger.error(
-        stripIndents`Target htmlhint already exists on project '${projectName}'!`
-      );
-      throw new Error('Target htmlhint already exists');
-    }
-  } catch (error: any) {
-    logger.error(
-      stripIndents`Unable to find project '${projectName}' in current workspace. Please make sure project exists!`
-    );
-    throw error;
-  }
   logger.info(
     stripIndents`Creating htmlhint target for project '${projectName}'...`
   );

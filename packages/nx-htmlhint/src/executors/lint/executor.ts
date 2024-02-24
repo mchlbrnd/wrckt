@@ -1,7 +1,8 @@
 import { spawn } from 'child_process';
 import { cwd } from 'process';
 import { LintExecutorSchema } from './schema';
-import path = require('path');
+import { resolve as pathResolve } from 'path';
+import { platform } from 'os';
 
 const lintExecutor = ({
   config,
@@ -19,7 +20,11 @@ const lintExecutor = ({
 }> => {
   return new Promise((resolve, reject) => {
     const htmlhint = spawn(
-      path.resolve('node_modules', '.bin', 'htmlhint'),
+      pathResolve(
+        'node_modules',
+        '.bin',
+        `htmlhint${platform() === 'win32' ? '.cmd' : ''}`
+      ),
       [
         ...(config ? ['-c', config] : []),
         ...(format ? ['-f', format] : []),
