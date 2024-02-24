@@ -44,11 +44,13 @@ const lintExecutor = ({
     htmlhint.stderr.pipe(process.stderr);
 
     let stdout = '';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     htmlhint.stdout.on('data', (chunk: any) => {
       stdout += chunk.toString();
     });
 
     let stderr = '';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     htmlhint.stderr.on('error', (chunk: any) => {
       stderr += chunk.toString();
     });

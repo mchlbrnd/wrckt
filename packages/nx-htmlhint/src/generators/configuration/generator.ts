@@ -26,8 +26,8 @@ export const configurationGenerator = async (
         `Target htmlhint already exists on project '${projectName}'!`
       );
     }
-  } catch (error: any) {
-    logger.error(error.message);
+  } catch (error: unknown) {
+    logger.error((error as Error).message);
     return Promise.resolve();
   }
 
