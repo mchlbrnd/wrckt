@@ -6,7 +6,10 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "target": {
+    "lintFilePattern": {
+      "aliases": [
+        "target"
+      ],
       "description": "<file|folder|pattern|stdin|url ...>",
       "type": "string",
       "$default": {
@@ -127,6 +130,6 @@
   },
   "required": [
     "config",
-    "target"
+    "lintFilePattern"
   ]
 }

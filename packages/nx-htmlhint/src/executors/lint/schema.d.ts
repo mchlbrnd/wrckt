@@ -1,5 +1,5 @@
 export interface LintExecutorSchema {
-  target: string;
+  lintFilePattern: string;
   config?: string;
   rules?: string;
   rulesDir?: string;

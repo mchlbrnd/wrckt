@@ -16,7 +16,7 @@ import {
   HTMLHINT_CONFIG,
   HTMLHINT_CONFIG_RULES,
   HTMLHINT_SEMVER,
-  HTMLHINT_TARGET_PATTERN,
+  HTMLHINT_LINT_FILE_PATTERN,
 } from '../../utils/utils';
 import { InitGeneratorSchema } from './schema';
 
@@ -88,7 +88,10 @@ const updateNxJson = (tree: Tree) => {
   nxJson.targetDefaults['htmlhint'].outputs ??= ['{options.outputFile}'];
   nxJson.targetDefaults['htmlhint'].options ??= {
     config: joinPathFragments('{workspaceRoot}', HTMLHINT_CONFIG),
-    target: joinPathFragments('{projectRoot}', HTMLHINT_TARGET_PATTERN),
+    lintFilePattern: joinPathFragments(
+      '{projectRoot}',
+      HTMLHINT_LINT_FILE_PATTERN
+    ),
   };
 
   devkitUpdateNxJson(tree, nxJson);

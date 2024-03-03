@@ -14,7 +14,7 @@ import {
   HTMLHINT_CONFIG,
   HTMLHINT_CONFIG_RULES,
   HTMLHINT_SEMVER,
-  HTMLHINT_TARGET_PATTERN,
+  HTMLHINT_LINT_FILE_PATTERN,
 } from '../../utils/utils';
 import generator from './generator';
 import { InitGeneratorSchema } from './schema';
@@ -102,7 +102,7 @@ describe('init generator', () => {
         outputs: ['{options.outputFile}'],
         options: {
           config: `{workspaceRoot}/${HTMLHINT_CONFIG}`,
-          target: `{projectRoot}/${HTMLHINT_TARGET_PATTERN}`,
+          lintFilePattern: `{projectRoot}/${HTMLHINT_LINT_FILE_PATTERN}`,
         },
       });
       expect(nxConfig.namedInputs?.['production']).toStrictEqual([

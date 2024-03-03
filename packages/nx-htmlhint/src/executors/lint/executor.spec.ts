@@ -1,16 +1,16 @@
 import { join } from 'path';
 import { cwd } from 'process';
-import { HTMLHINT_TARGET_PATTERN } from '../../utils/utils';
+import { HTMLHINT_LINT_FILE_PATTERN } from '../../utils/utils';
 import executor from './executor';
 
 describe('lint executor', () => {
   it('should run on non-existing directory and succeed', async () => {
     const { success, stdout } = await executor({
-      target: join(
+      lintFilePattern: join(
         cwd(),
         'tmp',
         '___does_not_exist___',
-        HTMLHINT_TARGET_PATTERN
+        HTMLHINT_LINT_FILE_PATTERN
       ),
     });
     expect(success).toBe(true);
