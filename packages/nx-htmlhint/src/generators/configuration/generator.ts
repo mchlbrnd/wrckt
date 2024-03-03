@@ -9,7 +9,7 @@ import {
   updateProjectConfiguration,
 } from '@nx/devkit';
 import { ConfigurationGeneratorSchema } from './schema';
-import { HTMLHINT_CONFIG, HTMLHINT_TARGET_PATTERN } from '../../utils/utils';
+import { HTMLHINT_CONFIG, HTMLHINT_LINT_FILE_PATTERN } from '../../utils/utils';
 import initGenerator from '../init/generator';
 export const configurationGenerator = async (
   tree: Tree,
@@ -49,7 +49,10 @@ export const configurationGenerator = async (
         withProjectConfig ? '{projectRoot}' : '{workspaceRoot}',
         HTMLHINT_CONFIG
       ),
-      target: joinPathFragments('{projectRoot}', HTMLHINT_TARGET_PATTERN),
+      lintFilePattern: joinPathFragments(
+        '{projectRoot}',
+        HTMLHINT_LINT_FILE_PATTERN
+      ),
     },
   };
 

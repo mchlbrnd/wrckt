@@ -1,6 +1,6 @@
 export const HTMLHINT_CONFIG = '.htmlhintrc';
 
-export const HTMLHINT_TARGET_PATTERN = '**/*.{htm,html}';
+export const HTMLHINT_LINT_FILE_PATTERN = '**/*.{htm,html}';
 
 export const HTMLHINT_CONFIG_RULES = {
   'alt-require': false, // The alt attribute of an <img> element must be present and alt attribute of area[href] and input[type=image] must have a value.

@@ -6,7 +6,7 @@ import { platform } from 'os';
 
 const lintExecutor = ({
   config,
-  target,
+  lintFilePattern,
   format,
   ignore,
   noColor,
@@ -33,7 +33,7 @@ const lintExecutor = ({
         ...(rules ? ['-r', rules] : []),
         ...(rulesDir ? ['-R', rulesDir] : []),
         ...(warn ? ['--warn'] : []),
-        target,
+        lintFilePattern,
       ],
       {
         cwd: cwd(),

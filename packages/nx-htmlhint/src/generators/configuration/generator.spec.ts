@@ -11,7 +11,7 @@ import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import {
   HTMLHINT_CONFIG,
   HTMLHINT_CONFIG_RULES,
-  HTMLHINT_TARGET_PATTERN,
+  HTMLHINT_LINT_FILE_PATTERN,
 } from '../../utils/utils';
 import generator from './generator';
 
@@ -41,7 +41,7 @@ describe('configuration generator', () => {
       executor: '@wrckt/nx-htmlhint:lint',
       options: {
         config: `{workspaceRoot}/${HTMLHINT_CONFIG}`,
-        target: `{projectRoot}/${HTMLHINT_TARGET_PATTERN}`,
+        lintFilePattern: `{projectRoot}/${HTMLHINT_LINT_FILE_PATTERN}`,
       },
     });
   });
@@ -65,7 +65,7 @@ describe('configuration generator', () => {
       executor: '@wrckt/nx-htmlhint:lint',
       options: {
         config: `{projectRoot}/${HTMLHINT_CONFIG}`,
-        target: `{projectRoot}/${HTMLHINT_TARGET_PATTERN}`,
+        lintFilePattern: `{projectRoot}/${HTMLHINT_LINT_FILE_PATTERN}`,
       },
     });
   });
