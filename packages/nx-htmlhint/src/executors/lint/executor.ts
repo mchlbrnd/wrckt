@@ -37,6 +37,7 @@ const lintExecutor = ({
       ],
       {
         cwd: cwd(),
+        shell: true,
       }
     );
 
