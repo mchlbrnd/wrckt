@@ -4,6 +4,8 @@ import { LintExecutorSchema } from './schema';
 import { resolve as pathResolve } from 'path';
 import { platform } from 'os';
 
+const isWin32 = platform() === 'win32';
+
 const lintExecutor = ({
   config,
   lintFilePattern,
@@ -20,11 +22,7 @@ const lintExecutor = ({
 }> => {
   return new Promise((resolve, reject) => {
     const htmlhint = spawn(
-      pathResolve(
-        'node_modules',
-        '.bin',
-        `htmlhint${platform() === 'win32' ? '.cmd' : ''}`
-      ),
+      pathResolve('node_modules', '.bin', `htmlhint${isWin32 ? '.cmd' : ''}`),
       [
         ...(config ? ['-c', config] : []),
         ...(format ? ['-f', format] : []),
@@ -37,6 +35,7 @@ const lintExecutor = ({
       ],
       {
         cwd: cwd(),
+        shell: isWin32,
       }
     );
 

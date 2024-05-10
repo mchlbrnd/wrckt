@@ -51,7 +51,7 @@ export function createWorkspace(
 
   // create workspace
   execSync(
-    `npx --yes create-nx-workspace@latest ${workspaceName} --preset=apps --nxCloud=skip`,
+    `npx --yes create-nx-workspace@18.3.3 ${workspaceName} --preset=apps --nxCloud=skip`,
     {
       cwd: resolve(cwd(), 'tmp'),
       env: process.env,
