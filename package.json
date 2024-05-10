@@ -34,6 +34,11 @@
     "@nx/devkit": "18.3.3",
     "tslib": "^2.3.0"
   },
+  "optionalDependencies": {
+    "@nx/nx-darwin-arm64": "18.3.3",
+    "@nx/nx-linux-x64-gnu": "18.3.3",
+    "@nx/nx-win32-x64-msvc": "18.3.3"
+  },
   "nx": {
     "includedScripts": []
   }
