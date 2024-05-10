@@ -12,7 +12,7 @@
   // "forwardPorts": [],
 
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "npm i -g nx@~18.0.4 && npm i"
+  "postCreateCommand": "npm i -g nx@~18.3.3 && npm i"
 
   // Configure tool-specific properties.
   // "customizations": {},
